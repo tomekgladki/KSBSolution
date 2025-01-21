@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edytuj preferencje</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <h2>Wybierz swoje preferencje</h2>
+    
+        <!-- Kraje -->
+        <label for="countries">Wybierz kraje:</label>
+        <div id="countries">
+            {% for country in countries %}
+            <label>
+                <input type="checkbox" name="countries" value="{{ country }}" {% if country in current_countries %}checked{% endif %}>
+                {{ country }}
+            </label><br>
+            {% endfor %}
+        </div>
+    
+        <!-- Sektory -->
+        <label for="sectors">Wybierz sektory:</label>
+        <div id="sectors">
+            {% for sector in sectors %}
+            <label>
+                <input type="checkbox" name="sectors" value="{{ sector }}" {% if sector in current_sectors %}checked{% endif %}>
+                {{ sector }}
+            </label><br>
+            {% endfor %}
+        </div>
+    
+        <!-- Kryterium -->
+        <label for="criteria">Wybierz kryterium:</label>
+        <div id="criteria">
+            {% for criterion in criteria %}
+            <label>
+                <input type="radio" name="criteria" value="{{ criterion }}" {% if criterion in current_criteria %}checked{% endif %}>
+                {{ criterion }}
+            </label><br>
+            {% endfor %}
+        </div>
+    
+        <button type="submit">Zapisz preferencje</button>
+        <a href="{% url 'dashboard' %}"><button type="button">Powrót</button></a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel użytkownika</title>
+</head>
+<body>
+    <!--<h1>Witaj, {{ request.user.username }}!</h1>
+    <h2>Twoje preferencje</h2>
+    <p>Wybrane kraje: {{ preferences.lista_krajów }}</p>
+    <p>Wybrane sektory: {{ preferences.sektory }}</p>
+    <p>Wybrane kryterium: {{ preferences.kryterium }}</p>
+
+    <a href="{% url 'edit_preferences' %}">
+        <button>Zmień preferencję</button>
+    </a>
+ --> 
+    
+ <h1>Witaj, {{ request.user.username }}!</h1>
+
+ <p>Twoje wybrane kraje: {{ selected_countries|join:", " }}</p>
+ <p>Twoje wybrane sektory: {{ selected_sectors|join:", " }}</p>
+ <p>Twoje wybrane kryterium: {{ selected_criteria|join:", " }}</p>
+ 
+ <a href="{% url 'edit_preferences' %}">
+     <button>Zmień preferencje</button>
+ </a>
+
+</body>
+</html>

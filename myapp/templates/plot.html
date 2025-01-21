@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wykres Django</title>
+</head>
+
+<body>
+    <h1>Witamy w aplikacji webowej FW BUSSINESS SOLUTIONS</h1>
+    <img src="data:image/png;base64,{{ plot_image }}" alt="Wykres">
+
+    <p>Masz już konto? <a href="{% url 'login' %}">Zaloguj się</a></p>
+    <p>Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
+
+</body>
+</html>
