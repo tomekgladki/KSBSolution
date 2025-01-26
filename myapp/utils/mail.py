@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 import os
 from jinja2 import Template
 
-def send_email(receiver_email, subject,name, main_content, template_path="email_template.html"):
+def send_email(receiver_email, subject,name, main_content, template_path="myapp/templates/email_template.html"):
     """
     Function to send a personalized email with an HTML template.
 
@@ -15,7 +15,7 @@ def send_email(receiver_email, subject,name, main_content, template_path="email_
     subject (str): Subject of the email.
     name (str): Recipient's name.
     main_content (str): Greeting or main content of the email.
-    template_path (str): Path to the HTML email template file (default is "email_template.html").
+    template_path (str): Path to the HTML email template file .
 
     Returns:
     None
