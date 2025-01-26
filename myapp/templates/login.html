@@ -1,14 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Logowanie</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Apply box-sizing to all elements */
+        * {
+            box-sizing: border-box; /* Ensures padding and borders are included in width/height */
+        }
+
+        /* Reset styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f5f2;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 350px; /* Adjusted max-width */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .card-header {
+            text-align: center;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: left;
+        }
+
+        input {
+            padding: 10px; /* Consistent padding */
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%; /* Full width */
+            max-width: 300px; /* Ensure same width as button */
+            margin-bottom: 10px; /* Space between input fields */
+        }
+
+        /* Button styles */
+        .btn {
+            background-color: #e46c1c;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            padding: 10px; /* Consistent padding to match input */
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%; /* Full width */
+            max-width: 300px; /* Same as input fields */
+        }
+
+        .btn:hover {
+            background-color: #c75a17; /* Darker gold */
+        }
+
+        /* Error message styles */
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        a {
+            color: #e46c1c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Zaloguj się</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Zaloguj</button>
-    </form>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Log in
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label for="username">Username</label>
+                        {{ form.username }}
+                        {% for error in form.username.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div>
+                        <label for="password">Password</label>
+                        {{ form.password }}
+                        {% for error in form.password.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn">Log in</button>
+                </form>
+                <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

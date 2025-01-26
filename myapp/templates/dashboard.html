@@ -1,29 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Panel użytkownika</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Panel</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f5f2;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #e46c1c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #c75a17;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px; /* Increased size for a larger window */
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preferences-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 15px;
+            text-align: left;
+        }
+
+        .preferences-container div {
+            display: flex;
+            flex-direction: column; /* Stack items vertically in each column */
+        }
+
+        .preferences-container .label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .preferences-container .value {
+            color: #666;
+            list-style-type: none; /* Removes list bullets */
+            padding-left: 0;
+        }
+
+        .preferences-container .value li {
+            margin-bottom: 5px; /* Spacing between each country/sector */
+        }
+    </style>
 </head>
 <body>
-    <!--<h1>Witaj, {{ request.user.username }}!</h1>
-    <h2>Twoje preferencje</h2>
-    <p>Wybrane kraje: {{ preferences.lista_krajów }}</p>
-    <p>Wybrane sektory: {{ preferences.sektory }}</p>
-    <p>Wybrane kryterium: {{ preferences.kryterium }}</p>
 
-    <a href="{% url 'edit_preferences' %}">
-        <button>Zmień preferencję</button>
-    </a>
- --> 
-    
- <h1>Witaj, {{ request.user.username }}!</h1>
+    <div class="container">
+        <h1>Welcome, {{ request.user.username }}!</h1>
 
- <p>Twoje wybrane kraje: {{ selected_countries|join:", " }}</p>
- <p>Twoje wybrane sektory: {{ selected_sectors|join:", " }}</p>
- <p>Twoje wybrane kryterium: {{ selected_criteria|join:", " }}</p>
- 
- <a href="{% url 'edit_preferences' %}">
-     <button>Zmień preferencje</button>
- </a>
+        <h2>Your Preferences</h2>
+
+        <div class="preferences-container">
+            <div>
+                <p class="label">Selected Countries:</p>
+                <ul class="value">
+                    {% for country in selected_countries %}
+                    <li>{{ country }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div>
+                <p class="label">Selected Sectors:</p>
+                <ul class="value">
+                    {% for sector in selected_sectors %}
+                    <li>{{ sector }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div>
+                <p class="label">Selected Criteria:</p>
+                <p class="value">{{ selected_criteria|join:", " }}</p>
+            </div>
+        </div>
+
+        <a href="{% url 'edit_preferences' %}">
+            <button>Change Preferences</button>
+        </a>
+    </div>
 
 </body>
 </html>

@@ -1,15 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Rejestracja</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        /* Apply box-sizing to all elements */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Reset styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f5f2;
+            margin: 0;
+            color: #333;
+        }
+
+        /* Center content in the page */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Card container */
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px; /* Limit max width */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-header {
+            text-align: center;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+
+        /* Label styling */
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        /* Input field styling */
+        input {
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%; /* Full width of parent container */
+            max-width: 100%; /* Ensures max width is full container width */
+            margin-bottom: 10px; /* Space between fields */
+        }
+
+        /* Button styling */
+        .btn {
+            background-color: #e46c1c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #c75a17;
+        }
+
+        /* Error message styling */
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Link styling for redirecting to login */
+        p {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        a {
+            color: #e46c1c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Rejestracja</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Zarejestruj się</button>
-    </form>
-    <p>Masz już konto? <a href="{% url 'login' %}">Zaloguj się</a></p>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Register
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Username Field -->
+                    <div>
+                        <label for="username">Username</label>
+                        <input type="text" name="username"  required>
+                        {% for error in form.username.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="email" name="email" required>
+                        {% for error in form.email.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password1">Password</label>
+                        <input type="password" name="password1" required>
+                        {% for error in form.password1.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <label for="password2">Confirm Password</label>
+                        <input type="password" name="password2" required>
+                        {% for error in form.password2.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn">Register</button>
+                </form>
+
+                <!-- Link to Login page -->
+                <p>Already have an account? <a href="{% url 'login' %}">Log in here</a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

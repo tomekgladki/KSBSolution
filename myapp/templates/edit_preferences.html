@@ -1,48 +1,245 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edytuj preferencje</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Preferences</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f5f2;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: left;
+            display: block;
+        }
+
+        .dropdown-container {
+            position: relative;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e5e5e5;
+            background-color: #fff;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            border: 1px solid #e5e5e5;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .dropdown-menu label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu label:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown-menu input {
+            margin-right: 10px;
+        }
+
+        .dropdown-container.open .dropdown-menu {
+            display: block;
+        }
+
+        button {
+            background-color: #e46c1c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+            align-self: center;
+        }
+
+        button:hover {
+            background-color: #c75a17;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .back-button {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .back-button:hover {
+            background-color: #bbb;
+        }
+
+    </style>
 </head>
+
 <body>
     <form method="post">
         {% csrf_token %}
-        <h2>Wybierz swoje preferencje</h2>
+        
+        <h2>Select Your Preferences</h2>
     
-        <!-- Kraje -->
-        <label for="countries">Wybierz kraje:</label>
-        <div id="countries">
-            {% for country in countries %}
-            <label>
-                <input type="checkbox" name="countries" value="{{ country }}" {% if country in current_countries %}checked{% endif %}>
-                {{ country }}
-            </label><br>
-            {% endfor %}
+        <!-- Countries -->
+        <div class="option-group">
+            <label for="countries">Select Countries:</label>
+            <div class="dropdown-container" id="countriesDropdown">
+                <div class="dropdown" onclick="toggleDropdown('countriesDropdown')">Select Countries</div>
+                <div class="dropdown-menu" id="countries">
+                    <label>
+                        <input type="checkbox" id="selectAllCountries" onclick="selectUnselectAll('countries')">
+                        Select / Unselect All
+                    </label>
+                    {% for country in countries %}
+                        <label>
+                            <input type="checkbox" name="countries" value="{{ country }}" {% if country in current_countries %}checked{% endif %}>
+                            {{ country }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     
-        <!-- Sektory -->
-        <label for="sectors">Wybierz sektory:</label>
-        <div id="sectors">
-            {% for sector in sectors %}
-            <label>
-                <input type="checkbox" name="sectors" value="{{ sector }}" {% if sector in current_sectors %}checked{% endif %}>
-                {{ sector }}
-            </label><br>
-            {% endfor %}
+        <!-- Sectors -->
+        <div class="option-group">
+            <label for="sectors">Select Sectors:</label>
+            <div class="dropdown-container" id="sectorsDropdown">
+                <div class="dropdown" onclick="toggleDropdown('sectorsDropdown')">Select Sectors</div>
+                <div class="dropdown-menu" id="sectors">
+                    <label>
+                        <input type="checkbox" id="selectAllSectors" onclick="selectUnselectAll('sectors')">
+                        Select / Unselect All
+                    </label>
+                    {% for sector in sectors %}
+                        <label>
+                            <input type="checkbox" name="sectors" value="{{ sector }}" {% if sector in current_sectors %}checked{% endif %}>
+                            {{ sector }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     
-        <!-- Kryterium -->
-        <label for="criteria">Wybierz kryterium:</label>
-        <div id="criteria">
-            {% for criterion in criteria %}
-            <label>
-                <input type="radio" name="criteria" value="{{ criterion }}" {% if criterion in current_criteria %}checked{% endif %}>
-                {{ criterion }}
-            </label><br>
-            {% endfor %}
+        <!-- Criteria -->
+        <div class="option-group">
+            <label for="criteria">Select Criteria:</label>
+            <div id="criteria">
+                {% for criterion in criteria %}
+                    <label>
+                        <input type="radio" name="criteria" value="{{ criterion }}" {% if criterion in current_criteria %}checked{% endif %}>
+                        {{ criterion }}
+                    </label>
+                {% endfor %}
+            </div>
         </div>
     
-        <button type="submit">Zapisz preferencje</button>
-        <a href="{% url 'dashboard' %}"><button type="button">Powrót</button></a>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <button type="submit">Save Preferences</button>
+            <a href="{% url 'dashboard' %}">
+                <button type="button" class="back-button">Back</button>
+            </a>
+        </div>
     </form>
+
+    <script>
+        // Toggle the dropdown menu visibility
+        function toggleDropdown(dropdownId) {
+            var dropdownContainer = document.getElementById(dropdownId);
+            dropdownContainer.classList.toggle('open');
+        }
+
+        // Close the dropdown if clicked outside of it
+        window.onclick = function(event) {
+            var dropdowns = document.querySelectorAll('.dropdown-container');
+            dropdowns.forEach(function(dropdown) {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+        }
+
+        // Select / Unselect all checkboxes
+        function selectUnselectAll(groupId) {
+            var checkboxes = document.querySelectorAll(`#${groupId} input[type="checkbox"]`);
+            var selectAllCheckbox = document.getElementById(`selectAll${capitalizeFirstLetter(groupId)}`);
+            
+            if (selectAllCheckbox.checked) {
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = true;
+                });
+            } else {
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = false;
+                });
+            }
+        }
+
+        // Capitalize the first letter of a string (used for the "Select All" ID)
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
 </body>
 </html>

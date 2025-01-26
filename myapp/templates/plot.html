@@ -1,15 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Wykres Django</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Chart</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f5f2;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Link Styling */
+        a {
+            color: #e46c1c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #333;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Witamy w aplikacji webowej FW BUSSINESS SOLUTIONS</h1>
-    <img src="data:image/png;base64,{{ plot_image }}" alt="Wykres">
-
-    <p>Masz już konto? <a href="{% url 'login' %}">Zaloguj się</a></p>
-    <p>Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
-
+    <h1>Welcome to the FW BUSINESS SOLUTIONS Web App</h1>
+    
+    <!-- Chart Image -->
+    <img src="data:image/png;base64,{{ plot_image }}" alt="Chart">
+    
+    <!-- Navigation Links -->
+    <div class="links">
+        <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+        <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+    </div>
 </body>
 </html>
