@@ -62,6 +62,11 @@ CRITERIA = [
     'Volatility', 'Beta', 'Drawdown', 'VaR', 'Sharpe'
 ]
 
+WEIGHTS = [
+    'Markovitz','Risk Metric','Inverse Reglin'
+]
+
+
 @login_required
 def user_dashboard(request):
     preferences = request.user.preferences
@@ -70,11 +75,13 @@ def user_dashboard(request):
     selected_countries = preferences.lista_krajów.split(',') if preferences.lista_krajów else []
     selected_sectors = preferences.sektory.split(',') if preferences.sektory else []
     selected_criteria = preferences.kryterium.split(',') if preferences.kryterium else []
+    selected_weights = preferences.wagi.split(',') if preferences.wagi else []
 
     context = {
         'selected_countries': selected_countries,
         'selected_sectors': selected_sectors,
         'selected_criteria': selected_criteria,
+        'selected_weights': selected_weights,
     }
     return render(request, 'dashboard.html', context)
 
@@ -88,11 +95,13 @@ def edit_preferences(request):
         selected_countries = request.POST.getlist('countries')
         selected_sectors = request.POST.getlist('sectors')
         selected_criteria = request.POST.get('criteria')
+        selected_weights = request.POST.get('weights')
 
         # Zapisanie wybranych wartości jako ciąg tekstowy
         preferences.lista_krajów = ','.join(selected_countries)
         preferences.sektory = ','.join(selected_sectors)
         preferences.kryterium = selected_criteria
+        preferences.wagi = selected_weights
         preferences.save()
 
         return redirect('dashboard')  # Powrót do dashboardu
@@ -101,14 +110,17 @@ def edit_preferences(request):
     current_countries = preferences.lista_krajów.split(',') if preferences.lista_krajów else []
     current_sectors = preferences.sektory.split(',') if preferences.sektory else []
     current_criteria = [preferences.kryterium] if preferences.kryterium else []
+    current_weights = [preferences.wagi] if preferences.wagi else []
 
     context = {
         'countries': COUNTRIES,
         'sectors': SECTORS,
         'criteria': CRITERIA,
+        'weights': WEIGHTS,
         'current_countries': current_countries,
         'current_sectors': current_sectors,
         'current_criteria': current_criteria,
+        'current_weights': current_weights,
     }
     return render(request, 'edit_preferences.html', context)
 '''

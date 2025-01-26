@@ -6,3 +6,4 @@ class UserPreferences(models.Model):
     lista_krajów = models.TextField(default="", blank=True)  # Lista wybranych krajówy
     sektory = models.TextField(default="", blank=True)     # Lista sektorów
     kryterium = models.TextField(default="", blank=True)    # Kryteria wyboru
+    wagi = models.TextField(default="", blank=True)      # Wybór wag

@@ -128,6 +128,11 @@
                 <p class="label">Selected Criteria:</p>
                 <p class="value">{{ selected_criteria|join:", " }}</p>
             </div>
+
+            <div>
+                <p class="label">Selected Weight:</p>
+                <p class="value">{{ selected_weights|join:", " }}</p>
+            </div>
         </div>
 
         <a href="{% url 'edit_preferences' %}">

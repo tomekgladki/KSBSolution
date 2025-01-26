@@ -194,6 +194,19 @@
                 {% endfor %}
             </div>
         </div>
+
+        <!-- Weight -->
+        <div class="option-group">
+            <label for="weights">Select Weight:</label>
+            <div id="weights">
+                {% for weight in weights %}
+                    <label>
+                        <input type="radio" name="weights" value="{{ weight }}" {% if weight in current_weights %}checked{% endif %}>
+                        {{ weight }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
     
         <div style="display: flex; gap: 20px; justify-content: center;">
             <button type="submit">Save Preferences</button>
