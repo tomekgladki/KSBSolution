@@ -16,18 +16,18 @@
             background-color: #f8f5f2;
             color: #333;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: flex-start;
             height: 100vh;
-            text-align: center;
             padding: 20px;
         }
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #333;
+        .container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
         }
 
         form {
@@ -35,11 +35,13 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: 65%;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         label {
@@ -133,97 +135,260 @@
             background-color: #bbb;
         }
 
+        .function-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .additional-options {
+            display: none;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            width: 30%;
+        }
+
+        .input-group input {
+            width: 65%;
+        }
+
+        /* Description Boxes on the Right */
+        .description-container {
+            background-color: #ffffff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .description-container h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .description-container p {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .description-boxes {
+            width: 30%;
+        }
+
     </style>
 </head>
 
 <body>
-    <form method="post">
-        {% csrf_token %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            
+            <h2>Select Your Preferences</h2>
         
-        <h2>Select Your Preferences</h2>
-    
-        <!-- Countries -->
-        <div class="option-group">
-            <label for="countries">Select Countries:</label>
-            <div class="dropdown-container" id="countriesDropdown">
-                <div class="dropdown" onclick="toggleDropdown('countriesDropdown')">Select Countries</div>
-                <div class="dropdown-menu" id="countries">
-                    <label>
-                        <input type="checkbox" id="selectAllCountries" onclick="selectUnselectAll('countries')">
-                        Select / Unselect All
-                    </label>
-                    {% for country in countries %}
+            <!-- Countries -->
+            <div class="option-group">
+                <label for="countries">Select Countries:</label>
+                <div class="dropdown-container" id="countriesDropdown">
+                    <div class="dropdown" onclick="toggleDropdown('countriesDropdown')">Select Countries</div>
+                    <div class="dropdown-menu" id="countries">
                         <label>
-                            <input type="checkbox" name="countries" value="{{ country }}" {% if country in current_countries %}checked{% endif %}>
-                            {{ country }}
+                            <input type="checkbox" id="selectAllCountries" onclick="selectUnselectAll('countries')">
+                            Select / Unselect All
+                        </label>
+                        {% for country in countries %}
+                            <label>
+                                <input type="checkbox" name="countries" value="{{ country }}" {% if country in current_countries %}checked{% endif %}>
+                                {{ country }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Sectors -->
+            <div class="option-group">
+                <label for="sectors">Select Sectors:</label>
+                <div class="dropdown-container" id="sectorsDropdown">
+                    <div class="dropdown" onclick="toggleDropdown('sectorsDropdown')">Select Sectors</div>
+                    <div class="dropdown-menu" id="sectors">
+                        <label>
+                            <input type="checkbox" id="selectAllSectors" onclick="selectUnselectAll('sectors')">
+                            Select / Unselect All
+                        </label>
+                        {% for sector in sectors %}
+                            <label>
+                                <input type="checkbox" name="sectors" value="{{ sector }}" {% if sector in current_sectors %}checked{% endif %}>
+                                {{ sector }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Financial Functions -->
+            <div class="function-container">
+                <!-- Volatility Function -->
+                <div class="function-container" id="volatility-container">
+                    <h2>
+                        <label for="volatility_1">Volatility Calculation</label>
+                        <input type="radio" name="criteria" value="Volatility" onclick="toggleOptions('volatility'); toggleDescription('volatility')">
+                    </h2>
+                    <div class="additional-options" id="volatility-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="n_co">Number of Samples:</label>
+                            <input type="number" id="n_co" value="100" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="risk">Risk:</label>
+                            <input type="number" id="risk" value="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beta Function -->
+                <div class="function-container" id="beta-container">
+                    <h2>
+                        <label for="beta_1">Beta Calculation</label>
+                        <input type="radio" name="criteria" value="Beta" onclick="toggleOptions('beta'); toggleDescription('beta')">
+                    </h2>
+                    <div class="additional-options" id="beta-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="beta_1">Beta 1:</label>
+                            <input type="number" id="beta_1" value="0.75" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="beta_2">Beta 2:</label>
+                            <input type="number" id="beta_2" value="1.25" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sharpe Ratio Function -->
+                <div class="function-container" id="sharpe-container">
+                    <h2>
+                        <label for="sharpe_1">Sharpe Ratio Calculation</label>
+                        <input type="radio" name="criteria" value="Sharpe" onclick="toggleOptions('sharpe'); toggleDescription('sharpe')">
+                    </h2>
+                    <div class="additional-options" id="sharpe-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="risk_free">Risk-Free Rate:</label>
+                            <input type="number" id="risk_free" value="0.0575/230" step="0.0001">
+                        </div>
+                        <div class="input-group">
+                            <label for="sharpe_1">Sharpe 1:</label>
+                            <input type="number" id="sharpe_1" value="0.0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="sharpe_2">Sharpe 2:</label>
+                            <input type="number" id="sharpe_2" value="0.16" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VaR Function -->
+            <div class="function-container" id="var-container">
+                <h2>
+                    <label for="var_1">VaR Calculation</label>
+                    <input type="radio" name="criteria" value="VaR" onclick="toggleOptions('var'); toggleDescription('var')">
+                </h2>
+                <div class="additional-options" id="var-options" style="display: none;">
+                    <div class="input-group">
+                        <label for="n_co">Number of Samples:</label>
+                        <input type="number" id="n_co" value="100" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="a">Confidence Level (a):</label>
+                        <input type="number" id="a" value="0.95" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawdown Function -->
+            <div class="function-container" id="drawdown-container">
+                <h2>
+                    <label for="drawdown_1">Drawdown Calculation</label>
+                    <input type="radio" name="criteria" value="Drawdown" onclick="toggleOptions('drawdown'); toggleDescription('drawdown')">
+                </h2>
+                <div class="additional-options" id="drawdown-options" style="display: none;">
+                    <div class="input-group">
+                        <label for="n_co">Number of Samples:</label>
+                        <input type="number" id="n_co" value="100" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weight -->
+            <div class="option-group">
+                <label for="weights">Select Weight:</label>
+                <div id="weights">
+                    {% for weight in weights %}
+                        <label>
+                            <input type="radio" name="weights" value="{{ weight }}" {% if weight in current_weights %}checked{% endif %}>
+                            {{ weight }}
                         </label>
                     {% endfor %}
                 </div>
             </div>
-        </div>
-    
-        <!-- Sectors -->
-        <div class="option-group">
-            <label for="sectors">Select Sectors:</label>
-            <div class="dropdown-container" id="sectorsDropdown">
-                <div class="dropdown" onclick="toggleDropdown('sectorsDropdown')">Select Sectors</div>
-                <div class="dropdown-menu" id="sectors">
-                    <label>
-                        <input type="checkbox" id="selectAllSectors" onclick="selectUnselectAll('sectors')">
-                        Select / Unselect All
-                    </label>
-                    {% for sector in sectors %}
-                        <label>
-                            <input type="checkbox" name="sectors" value="{{ sector }}" {% if sector in current_sectors %}checked{% endif %}>
-                            {{ sector }}
-                        </label>
-                    {% endfor %}
-                </div>
+
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <button type="submit">Save Preferences</button>
+                <a href="{% url 'dashboard' %}">
+                    <button type="button" class="back-button">Back</button>
+                </a>
             </div>
-        </div>
-    
-        <!-- Criteria -->
-        <div class="option-group">
-            <label for="criteria">Select Criteria:</label>
-            <div id="criteria">
-                {% for criterion in criteria %}
-                    <label>
-                        <input type="radio" name="criteria" value="{{ criterion }}" {% if criterion in current_criteria %}checked{% endif %}>
-                        {{ criterion }}
-                    </label>
-                {% endfor %}
+        </form>
+
+        <!-- Description Box Column -->
+        <div class="description-boxes">
+            <div id="description-volatility" class="description-container" style="display: none;">
+                <h3>Volatility Calculation</h3>
+                <p>This function calculates the volatility based on historical data, allowing you to analyze the risk and potential return of your selected options.</p>
+            </div>
+
+            <div id="description-beta" class="description-container" style="display: none;">
+                <h3>Beta Calculation</h3>
+                <p>Beta is a measure of a stock's volatility in relation to the overall market. This function allows you to calculate the Beta value for your selected stock or sector.</p>
+            </div>
+
+            <div id="description-sharpe" class="description-container" style="display: none;">
+                <h3>Sharpe Ratio Calculation</h3>
+                <p>The Sharpe ratio is used to evaluate the risk-adjusted return of an investment. It helps compare different investments' performance adjusted for risk.</p>
+            </div>
+
+            <div id="description-var" class="description-container" style="display: none;">
+                <h3>VaR (Value at Risk) Calculation</h3>
+                <p>VaR is a measure used to assess the potential loss in the value of an investment portfolio due to market movements. It estimates the worst loss under normal market conditions.</p>
+            </div>
+
+            <div id="description-drawdown" class="description-container" style="display: none;">
+                <h3>Drawdown Calculation</h3>
+                <p>Drawdown refers to the decline from a historical peak in some variable (such as portfolio value). It is an indicator of downside risk.</p>
             </div>
         </div>
 
-        <!-- Weight -->
-        <div class="option-group">
-            <label for="weights">Select Weight:</label>
-            <div id="weights">
-                {% for weight in weights %}
-                    <label>
-                        <input type="radio" name="weights" value="{{ weight }}" {% if weight in current_weights %}checked{% endif %}>
-                        {{ weight }}
-                    </label>
-                {% endfor %}
-            </div>
-        </div>
+        
+    </div>
+
     
-        <div style="display: flex; gap: 20px; justify-content: center;">
-            <button type="submit">Save Preferences</button>
-            <a href="{% url 'dashboard' %}">
-                <button type="button" class="back-button">Back</button>
-            </a>
-        </div>
-    </form>
 
     <script>
-        // Toggle the dropdown menu visibility
+        
         function toggleDropdown(dropdownId) {
             var dropdownContainer = document.getElementById(dropdownId);
             dropdownContainer.classList.toggle('open');
         }
 
-        // Close the dropdown if clicked outside of it
+
         window.onclick = function(event) {
             var dropdowns = document.querySelectorAll('.dropdown-container');
             dropdowns.forEach(function(dropdown) {
@@ -233,7 +398,7 @@
             });
         }
 
-        // Select / Unselect all checkboxes
+
         function selectUnselectAll(groupId) {
             var checkboxes = document.querySelectorAll(`#${groupId} input[type="checkbox"]`);
             var selectAllCheckbox = document.getElementById(`selectAll${capitalizeFirstLetter(groupId)}`);
@@ -249,9 +414,33 @@
             }
         }
 
-        // Capitalize the first letter of a string (used for the "Select All" ID)
+
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function toggleOptions(criterion) {
+            const allOptions = document.querySelectorAll('.additional-options');
+            allOptions.forEach(function(option) {
+                option.style.display = 'none';
+            });
+
+            const selectedOptions = document.getElementById(criterion + '-options');
+            selectedOptions.style.display = 'block';
+        }
+
+        function toggleDescription(criterion) {
+            // Hide all descriptions
+            const allDescriptions = document.querySelectorAll('.description-container');
+            allDescriptions.forEach(function(desc) {
+                desc.style.display = 'none';
+            });
+
+            // Show the selected description
+            const selectedDescription = document.getElementById('description-' + criterion);
+            if (selectedDescription) {
+                selectedDescription.style.display = 'block';
+            }
         }
     </script>
 </body>
