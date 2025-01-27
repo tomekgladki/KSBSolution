@@ -134,11 +134,21 @@
                 <p class="value">{{ selected_weights|join:", " }}</p>
             </div>
         </div>
-
+        
         <a href="{% url 'edit_preferences' %}">
             <button>Change Preferences</button>
 
         </a>
+
+        <!-- Przycisk do obliczenia portfela -->
+        <form method="POST" action="{% url 'wrap_wallet' %}">
+            {% csrf_token %}
+            <input type="hidden" name="countries" value="{{ selected_countries|join:',' }}">
+            <input type="hidden" name="sectors" value="{{ selected_sectors|join:',' }}">
+            <input type="hidden" name="criteria" value="{{ selected_criteria }}">
+            <input type="hidden" name="weight" value="{{ selected_weights }}">
+            <button type="submit">Calculate portfolio</button>
+        </form>
 
     </div>
 

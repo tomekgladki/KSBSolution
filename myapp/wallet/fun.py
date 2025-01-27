@@ -1,18 +1,14 @@
 import numpy as np
 import cvxpy as cp
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 
-import yfinance as yf
-from bs4 import BeautifulSoup
 
 def volatility_fun(stonks_data, n_co=100, risk=0):
     n = len(stonks_data['symbol'].unique())
 
     if n_co > n:
-        return "Given number of companies in portfolio is greater than on the given stock market."
+        n_co=round(1/2*n)
+        #return "Given number of companies in portfolio is greater than on the given stock market."
 
     # Calculate volatility
     volatility = stonks_data.groupby('symbol').apply(
@@ -31,7 +27,7 @@ def volatility_fun(stonks_data, n_co=100, risk=0):
     portfolio_stonks = portfolio.merge(stonks_data, on='symbol', how='left')
 
     return portfolio_stonks
-
+'''
 def beta_fun(stonks_data, market_data, beta_1=0.75, beta_2=1.25):
     # Calculate market returns
     market_data = market_data.copy()
@@ -59,6 +55,46 @@ def beta_fun(stonks_data, market_data, beta_1=0.75, beta_2=1.25):
     portfolio_stonks = portfolio.merge(stonks_data, on='symbol', how='left')
 
     return portfolio_stonks
+'''
+
+def beta_fun(stonks_data, market_data, beta_1=0.75, beta_2=1.25):
+    # Calculate market returns
+    market_data = market_data.copy()
+    market_data['returns'] = market_data['adjusted'].pct_change()
+
+    # Calculate stock returns and add market returns
+    stonks_data = stonks_data.copy()
+    stonks_data['returns'] = stonks_data.groupby('symbol')['adjusted'].transform(
+        lambda x: x.pct_change()
+    )
+
+    # Calculate betas for each stock
+    betas = stonks_data.groupby('symbol').apply(
+        lambda x: pd.Series({
+            'beta': np.cov(x['returns'].dropna(), market_data['returns'].dropna())[0, 1] / np.var(market_data['returns'].dropna())
+        })
+    ).reset_index()
+
+    # Debugging line: Check for 'returns' before dropping
+    #print(betas.head())  # Add this to inspect betas DataFrame
+
+    portfolio = betas[
+        (betas['beta'] > beta_1) &
+        (betas['beta'] < beta_2)
+    ].copy()
+
+    # Check if 'returns' exists before dropping
+    if 'returns' in portfolio.columns:
+        portfolio = portfolio.drop(columns=['returns', 'beta'])
+    else:
+        pass
+        #print("No 'returns' column to drop.")
+
+    portfolio_stonks = portfolio.merge(stonks_data, on='symbol', how='left')
+
+    return portfolio_stonks
+
+
 
 def drawdown_fun(stonks_data, n_co = 100):
 

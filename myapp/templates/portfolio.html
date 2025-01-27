@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Your Calculated Portfolio</h1>
+
+    {% if portfolio %}
+        <table>
+            <tr>
+                <th>Symbol</th>
+                <th>Weight</th>
+            </tr>
+            {% for stock in portfolio %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.weights }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No portfolio data available.</p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'dashboard' %}"><button>Back to Dashboard</button></a>
+
+</body>
+</html>

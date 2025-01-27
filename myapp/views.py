@@ -6,6 +6,8 @@ from .models import UserPreferences
 from django.contrib import messages
 from .forms import UserRegisterForm
 from .forms import PreferencesForm
+from myapp.wallet.wallet import wrapper
+import json
 
 
 def home(request):
@@ -123,6 +125,85 @@ def edit_preferences(request):
         'current_weights': current_weights,
     }
     return render(request, 'edit_preferences.html', context)
+
+'''
+@login_required
+def wrap_wallet(request):
+    if request.method == "POST":
+        try:
+            # Sprawdzamy, czy dane przychodzą poprawnie
+            print("Received POST request to wrap_wallet")
+
+            countries = request.POST.get("countries", "").split(",")
+            sectors = request.POST.get("sectors", "").split(",")
+            criteria = request.POST.get("criteria", "Volatility")
+            weight = request.POST.get("weight", "Markovitz")
+
+            print(f"Countries: {countries}")
+            print(f"Sectors: {sectors}")
+            print(f"Criteria: {criteria}")
+            print(f"Weight: {weight}")
+
+            # Uruchomienie obliczeń
+            result = wrapper(countries, sectors, criteria, weight)
+
+            print("Portfolio calculation completed")
+
+            # Przekazanie wyników do szablonu
+            context = {"portfolio": result.to_dict(orient="records")}
+            return render(request, "portfolio.html", context)
+
+        except Exception as e:
+            print(f"Error in wrap_wallet: {e}")
+            return render(request, "dashboard.html", {"error": str(e)})
+
+    return render(request, "dashboard.html")
+'''
+@login_required
+def wrap_wallet(request):
+    if request.method == "POST":
+        try:
+            # Sprawdzamy, czy dane przychodzą poprawnie
+            print("Received POST request to wrap_wallet")
+
+            countries = request.POST.get("countries", "").split(",")
+            sectors = request.POST.get("sectors", "").split(",")
+            criteria = request.POST.get("criteria", "Volatility")
+            weight = request.POST.get("weight", "Markovitz")
+
+            '''
+            # Jeśli 'criteria' i 'weight' są listami, to przekształć je na string
+            if isinstance(criteria, list):
+                criteria = criteria[0]  # Pobieramy pierwszy element listy
+            if isinstance(weight, list):
+                weight = weight[0]  # Pobieramy pierwszy element listy
+            '''
+            # Debugowanie
+            print(f"Countries: {countries}")
+            print(f"Sectors: {sectors}")
+            print(f"Criteria: {criteria}")
+            print(f"Weight: {weight}")
+
+            # Uruchomienie obliczeń
+            result, actions = wrapper(countries, sectors, criteria, weight)
+            print(result)
+            print("Portfolio calculation completed")
+
+            # Przekazanie wyników do szablonu
+            context = {"portfolio": actions.to_dict(orient="records")}
+            return render(request, "portfolio.html", context)
+
+        except Exception as e:
+            print(f"Error in wrap_wallet: {e}")
+            return render(request, "dashboard.html", {"error": str(e)})
+
+    return render(request, "dashboard.html")
+
+
+
+
+
+
 '''
     if request.method == 'POST':
         form = PreferencesForm(request.POST, instance=preferences)
