@@ -71,6 +71,8 @@ def wrapper(countries:[], sectors:[], criteria, weight):
     data = stockdata[stockdata["symbol"].isin(tickers)]
     print("data: ", data)
     market_data = pd.read_csv('sp500_data.csv', na_values='NA')
+    market_data = market_data[["date", "adjusted"]]
+    
     print("market: ",market_data)
 
     criteria_switch = {
@@ -97,7 +99,7 @@ def wrapper(countries:[], sectors:[], criteria, weight):
 
     # Wyświetlanie wyników
     criteria_result['weighted_adjusted'] = criteria_result['adjusted'] * criteria_result['weights']
-    
+    print(criteria_result)
 
     prices_list = []
 

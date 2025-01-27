@@ -14,6 +14,11 @@
 
     <h1>Your Calculated Portfolio</h1>
 
+    {% if plot_url %}
+    <h2>Portfolio Performance</h2>
+    <img src="{{ plot_url }}" alt="Portfolio Chart" style="width: 100%; max-width: 1200px;">
+    {% endif %}
+
     {% if portfolio %}
         <table>
             <tr>
