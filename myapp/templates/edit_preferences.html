@@ -163,20 +163,22 @@
         .description-container {
             background-color: #ffffff;
             padding: 15px;
-            margin: 10px 0;
+            margin: 20px 0;
             border-radius: 5px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 350px;
+            width: 110%;
+            max-width: 600px;
         }
 
         .description-container h3 {
-            font-size: 1.2rem;
+            font-size: 22px;
             margin-bottom: 10px;
         }
 
-        .description-container p {
-            font-size: 1rem;
+        .description-container p,
+        .description-container ul {
+            font-size: 18px;
+            line-height: 1.6;
             color: #333;
         }
 
@@ -184,13 +186,16 @@
             position: fixed;
             top: 20px; /* Adjust this to your preference */
             right: 20px; /* Adjust this to your preference */
-            width: 350px; /* Width of the description box container */
-            max-height: 90%; /* Prevent it from stretching too tall */
+            width: 600px; /* Width of the description box container */
+            max-height:110%; /* Prevent it from stretching too tall */
             overflow-y: auto; /* Allow vertical scrolling */
             z-index: 1000; /* Ensure it stays on top of other content */
         }   
 
     </style>
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
 </head>
 
 <body>
@@ -407,41 +412,149 @@
         <div class="description-boxes">
             <div id="description-volatility" class="description-container" style="display: none;">
                 <h3>Volatility Calculation</h3>
-                <p>This function calculates the volatility based on historical data, allowing you to analyze the risk and potential return of your selected options.</p>
+                <p>
+                    In <strong>volatility</strong>, the standard deviation of an asset's returns over a given period, 
+                    \( \text{return}_\text{std} \), serves as a measure of risk. Simply put, the higher the volatility, 
+                    the more variable or unstable the asset is.
+                </p>
+                <p> 
+
+                </p>
+                <p>
+                    In the considered function, the parameter \( n_{co} \) represents the number of assets, 
+                    while \( \text{risk} \) reflects their stability. For example:
+                </p>
+                <ul>
+                    <li>With \( n_{co} = 10 \) and \( \text{risk} = 0 \), we select the first 10 companies with the lowest volatility.</li>
+                    <li>With \( n_{co} = 10 \) and \( \text{risk} = 1 \), we select the last 10 companies with the highest volatility.</li>
+                    <li>With \( n_{co} = 10 \) and \( \text{risk} = 0.5 \), we select the middle 10 companies with moderate volatility.</li>
+                </ul>
             </div>
 
             <div id="description-beta" class="description-container" style="display: none;">
                 <h3>Beta Calculation</h3>
-                <p>Beta is a measure of a stock's volatility in relation to the overall market. This function allows you to calculate the Beta value for your selected stock or sector.</p>
+                <p>
+                    <strong>Beta</strong> is a measure of risk based on the correlation between the price movements of individual stocks and the overall market. 
+                    By adjusting the range of beta values, \( [\beta_1, \beta_2] \), we can determine whether the prices in our portfolio will move in line with the market 
+                    and how strongly they will react to market changes.
+                </p>
+                <p>Here are examples of typical beta intervals and their brief descriptions:</p>
+                <ul>
+                    <li>\( \beta < 0 \): Assets move inversely to the market.</li>
+                    <li>\( 0 \leq \beta < 1 \): Assets move in the same direction as the market but with less volatility.</li>
+                    <li>\( \beta = 1 \): Assets move in line with the market.</li>
+                    <li>\( \beta > 1 \): Assets are more volatile than the market, amplifying its movements.</li>
+                    <li>\( \beta \gg 1 \): Very high-risk assets with extreme sensitivity to market changes.</li>
+                </ul>
             </div>
-
-            <div id="description-sharpe" class="description-container" style="display: none;">
-                <h3>Sharpe Ratio Calculation</h3>
-                <p>The Sharpe ratio is used to evaluate the risk-adjusted return of an investment. It helps compare different investments' performance adjusted for risk.</p>
-            </div>
-
-            <div id="description-var" class="description-container" style="display: none;">
-                <h3>VaR (Value at Risk) Calculation</h3>
-                <p>VaR is a measure used to assess the potential loss in the value of an investment portfolio due to market movements. It estimates the worst loss under normal market conditions.</p>
-            </div>
-
+            
             <div id="description-drawdown" class="description-container" style="display: none;">
                 <h3>Drawdown Calculation</h3>
-                <p>Drawdown refers to the decline from a historical peak in some variable (such as portfolio value). It is an indicator of downside risk.</p>
+                <p>
+                    In <strong>drawdown</strong>, we calculate the difference between the highest and lowest price an asset has reached over a given period. 
+                    Intuitively, drawdown helps measure the maximum loss an investor could have faced during that time, indicating the asset's risk level during downturns.
+                </p>
+                <p>
+                    After calculating the drawdown, we rank the assets in ascending order of their drawdown values and select the first \( n_{co} \) assets with the smallest drawdowns.
+                </p>
+            </div>
+            
+            <div id="description-var" class="description-container" style="display: none;">
+                <h3>Value at Risk (VaR) Calculation</h3>
+                <p>
+                    Assuming we know the returns of a given asset over consecutive days of a specific period, we can determine how frequently certain return values occurred 
+                    (i.e., plot a histogram). We can then ask what threshold defines extremely negative returns for the asset. This threshold is called <strong>Value at Risk</strong> (VaR).
+                </p>
+                <p>
+                    Statistically, we determine this threshold by selecting a confidence level \( a \) (e.g., 95% or 99%). 
+                    VaR is the return value below which a specified percentage (\( 1-a \)) of all returns fall — meaning there’s only a \( 1-a \) probability of observing worse losses over the given period.
+                </p>
+                <p>
+                    After calculating VaR for each asset, we rank the assets in descending order of their VaR values and select the top \( n_{co} \) assets with the highest VaR.
+                </p>
+            </div>
+            
+            <div id="description-sharpe" class="description-container" style="display: none;">
+                <h3>Sharpe Ratio Calculation</h3>
+                <p>
+                    Assume that the stock market is open for \( 230 \) days during the given investment period. One way to invest without risk is to allocate money in bonds 
+                    with an annual return of \( 0.0575 \) (5.75% in percentage terms). On average, this yields a daily return of \( 0.0575/230 \) (5.75%/230 in percentage terms). 
+                    We can then ask what would happen if the same money were invested in the stock market instead of bonds.
+                </p>
+                <p>
+                    The <strong>Sharpe ratio</strong> measures how much the average return of an asset exceeds the risk-free return 
+                    (in this example, \( 0.0575/230 \)) relative to the risk taken (typically expressed as the standard deviation of the returns).
+                </p>
+                <p>Sharpe intervals, with boundaries denoted as \( \text{sharpe}_1 \) and \( \text{sharpe}_2 \), can guide investment decisions:</p>
+                <ul>
+                    <li>\( \text{Sharpe} < 0 \): Indicates negative returns compared to the risk-free rate, signaling poor performance.</li>
+                    <li>\( 0 \leq \text{Sharpe} < 1 \): Returns are better than risk-free, but not very favorable considering the risk.</li>
+                    <li>\( \text{Sharpe} = 1 \): Good performance; the excess return is proportional to the risk taken.</li>
+                    <li>\( \text{Sharpe} > 1 \): Excellent performance; a high return compared to the level of risk assumed.</li>
+                </ul>
+                <p>In our function, these intervals enable us to select assets based on their relative performance and risk-adjusted returns.</p>
             </div>
             <div id="description-markowitz" class="description-container" style="display: none;">
                 <h3>Markowitz Portfolio Optimization</h3>
-                <p>This function optimizes a portfolio by selecting the best mix of assets, aiming to maximize returns while minimizing risk based on the given parameters.</p>
+                <p>
+                    The general goal of the <strong>Markowitz algorithm</strong> is to maximize the expected return of the portfolio while minimizing its risk. 
+                    Mathematically, we want to maximize the difference:
+                </p>
+                <p>
+                    $$ \mu^T w - \gamma w^T \Sigma w, $$
+                </p>
+                <p>where:</p>
+                <p>
+                    $$ \mathbb{E}_r = \mu, \text{var}(R) = w^T \Sigma w $$
+                </p>
+                <p>
+                    Explanation of symbols:
+                </p>
+                <ul>
+                    <li><strong>\(\mu\)</strong>: The vector of expected returns of the assets in the portfolio.</li>
+                    <li><strong>\(w\)</strong>: The vector of weights of the assets in the portfolio, representing the percentage of the total portfolio allocated to each asset.</li>
+                    <li><strong>\(\Sigma\)</strong>: The covariance matrix of asset returns, where each entry represents the covariance between the returns of two assets.</li>
+                    <li><strong>\(\mathbf{E}r = \mu\)</strong>: The expected return of the portfolio is given by the weighted sum of individual asset returns (\(\mu\)).</li>
+                    <li><strong>\(\text{var}(R) = w^T \Sigma w\)</strong>: The portfolio variance (a measure of risk) is given by the quadratic form of the weight vector and the covariance matrix.</li>
+                    <li><strong>\(\gamma\)</strong>: A risk aversion parameter that determines the trade-off between return and risk. Higher values of \(\gamma\) lead to more risk-averse portfolios.</li>
+                </ul>
+                <p>For simplicity, in our function, we have three options for the value of \(\gamma\):</p>
+                <ul>
+                    <li><strong>`return-var`</strong>: Maximizes the ratio of the average return to risk, focusing on the most efficient risk-return trade-off.</li>
+                    <li><strong>`min-var`</strong>: Minimizes risk, even at the expense of lower expected returns, targeting a portfolio with the least volatility.</li>
+                    <li><strong>`max-return`</strong>: Maximizes expected return, accepting the highest possible risk to achieve the largest returns.</li>
+                </ul>
             </div>
             
             <div id="description-risk-metric" class="description-container" style="display: none;">
                 <h3>Risk Metric Calculation</h3>
-                <p>This function calculates the risk of an investment or portfolio, taking into account volatility and confidence levels to measure the potential for loss.</p>
+                <p>
+                    To determine resource allocation, we can use some of the risk metrics discussed in the <em>Preselection</em> section. Among the available options, we have already covered volatility, drawdown, and Value at Risk (VaR).
+                </p>
+                <p>
+                    The <strong>dwell</strong> option selects resources that remained within a specified value range (parameters: <strong>\(\text{start}\)</strong> and <strong>\(\text{end}\)</strong>).
+                </p>
+                <p>
+                    In the function under consideration, resource allocation can be carried out in two ways (parameter: <strong>\(\text{method}\)</strong>):
+                </p>
+                <ul>
+                    <li><strong>proportional</strong>: The share of a given resource in the portfolio depends on the magnitude of the risk metric (mathematically: the weight is directly proportional to the risk metric); for example, the greater the drawdown, the larger the share of the resource in the portfolio.</li>
+                    <li><strong>equal</strong>: Resource shares in the portfolio are adjusted so that each contributes the same magnitude of the risk metric; for example, every resource enters the portfolio with the same volatility.</li>
+                </ul>
             </div>
             
             <div id="description-inverse-regression" class="description-container" style="display: none;">
                 <h3>Inverse Regression Calculation</h3>
-                <p>This method uses inverse regression analysis to assess the relationship between independent and dependent variables, helping you predict one variable from the other.</p>
+                <p>
+                    Let us assume that our investment period spans <strong>230 days</strong>. The stock prices we aim to invest in start around <strong>$150</strong> and are expected to reach <strong>$200</strong> by the end of the period.
+                </p>
+                <p>
+                    The considered function selects stocks whose price trajectories are closest to a linear growth from <strong>$150</strong> to <strong>$200</strong> over the <strong>230-day period</strong>.
+                </p>
+                <p>
+                    Mathematically, using the <strong>least squares method</strong>, we look for a linear combination of stock price charts that most closely aligns with the straight line passing through the points <strong>(1, 150)</strong> and <strong>(230, 200)</strong>.
+                </p>
+                <p><strong>Note:</strong> Introducing unrealistic stock prices or growth patterns may result in nonsensical charts being returned, or none at all.</p>
             </div>
             
         </div>
