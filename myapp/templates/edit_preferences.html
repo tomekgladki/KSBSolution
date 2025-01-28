@@ -181,8 +181,14 @@
         }
 
         .description-boxes {
-            width: 30%;
-        }
+            position: fixed;
+            top: 20px; /* Adjust this to your preference */
+            right: 20px; /* Adjust this to your preference */
+            width: 350px; /* Width of the description box container */
+            max-height: 90%; /* Prevent it from stretching too tall */
+            overflow-y: auto; /* Allow vertical scrolling */
+            z-index: 1000; /* Ensure it stays on top of other content */
+        }   
 
     </style>
 </head>
@@ -236,11 +242,13 @@
         
             <!-- Financial Functions -->
             <div class="function-container">
+                <label for="Functions">Select Function:</label>
+        
                 <!-- Volatility Function -->
                 <div class="function-container" id="volatility-container">
                     <h2>
                         <label for="volatility_1">Volatility Calculation</label>
-                        <input type="radio" name="criteria" value="Volatility" onclick="toggleOptions('volatility'); toggleDescription('volatility')">
+                        <input type="radio" name="function_criteria" value="Volatility" onclick="toggleOptions('volatility'); toggleDescription('volatility')">
                     </h2>
                     <div class="additional-options" id="volatility-options" style="display: none;">
                         <div class="input-group">
@@ -253,12 +261,12 @@
                         </div>
                     </div>
                 </div>
-
+        
                 <!-- Beta Function -->
                 <div class="function-container" id="beta-container">
                     <h2>
                         <label for="beta_1">Beta Calculation</label>
-                        <input type="radio" name="criteria" value="Beta" onclick="toggleOptions('beta'); toggleDescription('beta')">
+                        <input type="radio" name="function_criteria" value="Beta" onclick="toggleOptions('beta'); toggleDescription('beta')">
                     </h2>
                     <div class="additional-options" id="beta-options" style="display: none;">
                         <div class="input-group">
@@ -271,17 +279,17 @@
                         </div>
                     </div>
                 </div>
-
+        
                 <!-- Sharpe Ratio Function -->
                 <div class="function-container" id="sharpe-container">
                     <h2>
                         <label for="sharpe_1">Sharpe Ratio Calculation</label>
-                        <input type="radio" name="criteria" value="Sharpe" onclick="toggleOptions('sharpe'); toggleDescription('sharpe')">
+                        <input type="radio" name="function_criteria" value="Sharpe" onclick="toggleOptions('sharpe'); toggleDescription('sharpe')">
                     </h2>
                     <div class="additional-options" id="sharpe-options" style="display: none;">
                         <div class="input-group">
                             <label for="risk_free">Risk-Free Rate:</label>
-                            <input type="number" id="risk_free" value="0.0575/230" step="0.0001">
+                            <input type="number" id="risk_free" value="0.0575" step="0.0001">
                         </div>
                         <div class="input-group">
                             <label for="sharpe_1">Sharpe 1:</label>
@@ -293,53 +301,99 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- VaR Function -->
-            <div class="function-container" id="var-container">
-                <h2>
-                    <label for="var_1">VaR Calculation</label>
-                    <input type="radio" name="criteria" value="VaR" onclick="toggleOptions('var'); toggleDescription('var')">
-                </h2>
-                <div class="additional-options" id="var-options" style="display: none;">
-                    <div class="input-group">
-                        <label for="n_co">Number of Samples:</label>
-                        <input type="number" id="n_co" value="100" step="1">
+
+                <!-- VaR Function -->
+                <div class="function-container" id="var-container">
+                    <h2>
+                        <label for="var_1">VaR (Value at Risk) Calculation</label>
+                        <input type="radio" name="function_criteria" value="VaR" onclick="toggleOptions('var'); toggleDescription('var')">
+                    </h2>
+                    <div class="additional-options" id="var-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="n_co">Number of Companies:</label>
+                            <input type="number" id="n_co" value="100" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="a">Confidence Level (a):</label>
+                            <input type="number" id="a" value="0.95" step="0.01">
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="a">Confidence Level (a):</label>
-                        <input type="number" id="a" value="0.95" step="0.01">
+                </div>
+                
+                <!-- Drawdown Function -->
+                <div class="function-container" id="drawdown-container">
+                    <h2>
+                        <label for="drawdown_1">Drawdown Calculation</label>
+                        <input type="radio" name="function_criteria" value="Drawdown" onclick="toggleOptions('drawdown'); toggleDescription('drawdown')">
+                    </h2>
+                    <div class="additional-options" id="drawdown-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="n_co">Number of Companies:</label>
+                            <input type="number" id="n_co" value="100" step="1">
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Drawdown Function -->
-            <div class="function-container" id="drawdown-container">
-                <h2>
-                    <label for="drawdown_1">Drawdown Calculation</label>
-                    <input type="radio" name="criteria" value="Drawdown" onclick="toggleOptions('drawdown'); toggleDescription('drawdown')">
-                </h2>
-                <div class="additional-options" id="drawdown-options" style="display: none;">
-                    <div class="input-group">
-                        <label for="n_co">Number of Samples:</label>
-                        <input type="number" id="n_co" value="100" step="1">
-                    </div>
-                </div>
-            </div>
-
+        
             <!-- Weight -->
             <div class="option-group">
                 <label for="weights">Select Weight:</label>
-                <div id="weights">
-                    {% for weight in weights %}
-                        <label>
-                            <input type="radio" name="weights" value="{{ weight }}" {% if weight in current_weights %}checked{% endif %}>
-                            {{ weight }}
-                        </label>
-                    {% endfor %}
+                <div class="function-container" id="markowitz-container">
+                    <h2>
+                        <label for="markowitz">Markowitz Portfolio Optimization</label>
+                        <input type="radio" name="weight_criteria" value="Markowitz" onclick="toggleOptions('markowitz'); toggleDescription('markowitz')">
+                    </h2>
+                    <div class="additional-options" id="markowitz-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="markowitz-choices">Choose an option:</label>
+                            <select id="markowitz-choices" name="markowitz-choices">
+                                <option value="choice1">Choice 1</option>
+                                <option value="choice2">Choice 2</option>
+                                <option value="choice3">Choice 3</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="function-container" id="risk-metric-container">
+                    <h2>
+                        <label for="risk-metric">Risk Metric Calculation</label>
+                        <input type="radio" name="weight_criteria" value="Risk Metric" onclick="toggleOptions('risk-metric'); toggleDescription('risk-metric')">
+                    </h2>
+                    <div class="additional-options" id="risk-metric-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="risk-metric-choices">Choose an option:</label>
+                            <select id="risk-metric-choices" name="risk-metric-choices">
+                                <option value="choice1">Choice 1</option>
+                                <option value="choice2">Choice 2</option>
+                                <option value="choice3">Choice 3</option>
+                                <option value="choice4">Choice 4</option>
+                            </select>
+                        </div>
+                    </div>  
+                </div>
+                <div class="function-container" id="inverse-regression-container">
+                    <h2>
+                        <label for="inverse-regression">Inverse Regression Calculation</label>
+                        <input type="radio" name="weight_criteria" value="Inverse Regression" onclick="toggleOptions('inverse-regression'); toggleDescription('inverse-regression')">
+                    </h2>
+                    <div class="additional  -options" id="inverse-regression-options" style="display: none;">
+                        <div class="input-group">
+                            <label for="inverse-regression-choices">Choose an option:</label>
+                            <div class="input-group">
+                                <label for="data_start">Start:</label>
+                                <input type="number" id="data_start" value="100" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="data_end">End:</label>
+                                <input type="number" id="data_end" value="100" step="0.1">
+                            </div>
 
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        
             <div style="display: flex; gap: 20px; justify-content: center;">
                 <button type="submit">Save Preferences</button>
                 <a href="{% url 'dashboard' %}">
@@ -347,6 +401,7 @@
                 </a>
             </div>
         </form>
+        
 
         <!-- Description Box Column -->
         <div class="description-boxes">
@@ -374,6 +429,21 @@
                 <h3>Drawdown Calculation</h3>
                 <p>Drawdown refers to the decline from a historical peak in some variable (such as portfolio value). It is an indicator of downside risk.</p>
             </div>
+            <div id="description-markowitz" class="description-container" style="display: none;">
+                <h3>Markowitz Portfolio Optimization</h3>
+                <p>This function optimizes a portfolio by selecting the best mix of assets, aiming to maximize returns while minimizing risk based on the given parameters.</p>
+            </div>
+            
+            <div id="description-risk-metric" class="description-container" style="display: none;">
+                <h3>Risk Metric Calculation</h3>
+                <p>This function calculates the risk of an investment or portfolio, taking into account volatility and confidence levels to measure the potential for loss.</p>
+            </div>
+            
+            <div id="description-inverse-regression" class="description-container" style="display: none;">
+                <h3>Inverse Regression Calculation</h3>
+                <p>This method uses inverse regression analysis to assess the relationship between independent and dependent variables, helping you predict one variable from the other.</p>
+            </div>
+            
         </div>
 
         
@@ -382,7 +452,7 @@
     
 
     <script>
-        
+
         function toggleDropdown(dropdownId) {
             var dropdownContainer = document.getElementById(dropdownId);
             dropdownContainer.classList.toggle('open');
