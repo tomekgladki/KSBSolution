@@ -123,7 +123,7 @@ def wrapper(countries:[], sectors:[], criteria, weight):
 
 def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowitz",
             n_co=100, risk=0, beta_1=0.75, beta_2=1.25, sharpe_1=0.0, sharpe_2=0.16, a=0.95,
-            markowitz_method="return-var", risk_metric_type="volatility",
+            markowitz_method="return-var", risk_metric_type="volatility", risk_method="proportional",
             data_start=150, data_end=200):
     print(countries)
     print(sectors)
@@ -174,7 +174,7 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
     # Obsługa wyboru metody wag
     weight_functions = {
         "Markowitz": Markowitz_fun(criteria_result, method=markowitz_method),
-        "Risk Metric": risk_metric_fun(criteria_result, risk_metric=risk_metric_type, start=data_start, end=data_end),
+        "Risk Metric": risk_metric_fun(criteria_result, risk_metric=risk_metric_type, method=risk_method, start=data_start, end=data_end),
         "Inverse Regression": inv_reglin_fun(criteria_result, start=data_start, end=data_end)
     }
 

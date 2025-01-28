@@ -379,6 +379,7 @@ def wrap_wallet(request):
             # Pobranie dodatkowych parametrów dla wag
             markowitz_method = request.POST.get("markowitz-choices", "return-var")
             risk_metric_type = request.POST.get("risk-metric-choices", "volatility")
+            risk_method = request.POST.get("risk-method", "proportional")
             data_start = request.POST.get("data_start", 150)
             data_end = request.POST.get("data_end", 200)
 
@@ -401,6 +402,7 @@ def wrap_wallet(request):
                 a=float(a),
                 markowitz_method=markowitz_method,
                 risk_metric_type=risk_metric_type,
+                risk_method=risk_method,
                 data_start=int(data_start),
                 data_end=int(data_end)
             )
