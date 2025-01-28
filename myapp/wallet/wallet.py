@@ -135,22 +135,24 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
     # Usuwamy zbędne spacje na początku i końcu każdego elementu
     countries = [country.strip() for country in countries]
     sectors = [sector.strip() for sector in sectors]
-    print(countries)
-    print(sectors)
 
     print("1")
     tickers = select_tickers(countries, sectors)
     print(tickers)
-    stockdata = pd.read_csv("stonks_data.csv")
+    stockdata = pd.read_csv("stock_data2.csv")
+    stockdata = stockdata.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
+    print(stockdata)
     print("2")
     data = stockdata[stockdata["symbol"].isin(tickers)]
-    market_data = pd.read_csv('sp500_data.csv', na_values='NA')
+    market_data = pd.read_csv('sp500cleaned.csv', na_values='NA')
+    market_data = market_data.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
+    print(market_data)
     print("3")
-    print("Data (tickers after filtering):")
-    print(data.head())
+    #print("Data (tickers after filtering):")
+    #print(data.head())
 
-    print("Market data:")
-    print(market_data.head())
+    #print("Market data:")
+    #print(market_data.head())
 
     print("Checking if necessary columns exist in data:")
     print("symbol" in data.columns, "adjusted" in data.columns)

@@ -411,7 +411,7 @@ def wrap_wallet(request):
             os.makedirs(img_dir, exist_ok=True)
             
             # Wczytanie danych rynkowych
-            market_data = pd.read_csv("sp500_data.csv", na_values="NA")
+            market_data = pd.read_csv("sp500cleaned.csv", na_values="NA")
             market_data["date"] = pd.to_datetime(market_data["date"])
             prices_df["date"] = pd.to_datetime(prices_df["date"])
             
