@@ -199,7 +199,6 @@
             {% csrf_token %}
             
             <h2>Select Your Preferences</h2>
-        
             <!-- Countries -->
             <div class="option-group">
                 <label for="countries">Select Countries:</label>
@@ -239,6 +238,7 @@
                     </div>
                 </div>
             </div>
+            
         
             <!-- Financial Functions -->
             <div class="function-container">
@@ -348,9 +348,9 @@
                         <div class="input-group">
                             <label for="markowitz-choices">Choose an option:</label>
                             <select id="markowitz-choices" name="markowitz-choices">
-                                <option value="choice1">Choice 1</option>
-                                <option value="choice2">Choice 2</option>
-                                <option value="choice3">Choice 3</option>
+                                <option value="choice1">Return VaR</VaR></option>
+                                <option value="choice2">Minimum VaR</option>
+                                <option value="choice3">Max return</option>
                             </select>
                         </div>
                     </div>
@@ -364,10 +364,10 @@
                         <div class="input-group">
                             <label for="risk-metric-choices">Choose an option:</label>
                             <select id="risk-metric-choices" name="risk-metric-choices">
-                                <option value="choice1">Choice 1</option>
-                                <option value="choice2">Choice 2</option>
-                                <option value="choice3">Choice 3</option>
-                                <option value="choice4">Choice 4</option>
+                                <option value="choice1">Volatility</option>
+                                <option value="choice2">Drawdown</option>
+                                <option value="choice3">VaR</option>
+                                <option value="choice4">Dwell</option>
                             </select>
                         </div>
                     </div>  
@@ -382,11 +382,11 @@
                             <label for="inverse-regression-choices">Choose an option:</label>
                             <div class="input-group">
                                 <label for="data_start">Start:</label>
-                                <input type="number" id="data_start" value="100" step="0.1">
+                                <input type="number" id="data_start" value="150" step="0.1">
                             </div>
                             <div class="input-group">
                                 <label for="data_end">End:</label>
-                                <input type="number" id="data_end" value="100" step="0.1">
+                                <input type="number" id="data_end" value="200" step="0.1">
                             </div>
 
                         </div>
@@ -512,6 +512,33 @@
                 selectedDescription.style.display = 'block';
             }
         }
+
+        
+        function checkFormValidity() {
+            let criteriaSelected = document.querySelector('input[name="function_criteria"]:checked');
+            let weightSelected = document.querySelector('input[name="weight_criteria"]:checked');
+            let saveButton = document.getElementById('savePreferencesButton');
+
+            if (criteriaSelected && weightSelected) {
+                saveButton.disabled = false;
+            } else {
+                saveButton.disabled = true;
+            }
+        }
+
+        // Dodanie event listenerów do wszystkich kryteriów i wag
+        document.querySelectorAll('input[name="function_criteria"]').forEach(input => {
+            input.addEventListener('change', checkFormValidity);
+        });
+
+        document.querySelectorAll('input[name="weight_criteria"]').forEach(input => {
+            input.addEventListener('change', checkFormValidity);
+        });
+
+        // Uruchamiamy walidację po załadowaniu strony
+        window.onload = checkFormValidity;
+
+
     </script>
 </body>
 </html>

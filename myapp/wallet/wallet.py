@@ -60,6 +60,7 @@ def wrapper(countries:[], sectors:[], criteria, weight):
     return prices_df
 '''
 
+'''
 def wrapper(countries:[], sectors:[], criteria, weight):
     # Jeżeli przychodzą jako lista, przekształcamy je na pojedynczy string
     criteria = criteria[2:-2]
@@ -115,6 +116,92 @@ def wrapper(countries:[], sectors:[], criteria, weight):
     })
 
     return prices_df, unique_symbols_weights
+'''
+
+
+
+
+def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowitz",
+            n_co=100, risk=0, beta_1=0.75, beta_2=1.25, sharpe_1=0.0, sharpe_2=0.16, a=0.95,
+            markowitz_method="return-var", risk_metric_type="volatility",
+            data_start=150, data_end=200):
+    print(countries)
+    print(sectors)
+
+    # Rozbijamy pojedynczy string w liście na listę oddzielnych wartości
+    countries = countries[0].split(',')
+    sectors = sectors[0].split(',')
+
+    # Usuwamy zbędne spacje na początku i końcu każdego elementu
+    countries = [country.strip() for country in countries]
+    sectors = [sector.strip() for sector in sectors]
+    print(countries)
+    print(sectors)
+
+    print("1")
+    tickers = select_tickers(countries, sectors)
+    print(tickers)
+    stockdata = pd.read_csv("stonks_data.csv")
+    print("2")
+    data = stockdata[stockdata["symbol"].isin(tickers)]
+    market_data = pd.read_csv('sp500_data.csv', na_values='NA')
+    print("3")
+    print("Data (tickers after filtering):")
+    print(data.head())
+
+    print("Market data:")
+    print(market_data.head())
+
+    print("Checking if necessary columns exist in data:")
+    print("symbol" in data.columns, "adjusted" in data.columns)
+    print("symbol" in market_data.columns, "adjusted" in market_data.columns)
+    # Obsługa wyboru kryterium
+    criteria_functions = {
+        "Volatility": volatility_fun(data, n_co=n_co, risk=risk),
+        "Beta": beta_fun(data, market_data, beta_1=beta_1, beta_2=beta_2),
+        "Drawdown": drawdown_fun(data, n_co=n_co),
+        "VaR": VaR_fun(data, n_co=n_co, a=a),
+        "Sharpe": sharpe_fun(data, sharpe_1=sharpe_1, sharpe_2=sharpe_2)
+    }
+    print("4")
+    criteria_result = criteria_functions.get(criteria, None)
+    print(criteria_result)
+    if criteria_result is None:
+        raise ValueError(f"Invalid criteria: {criteria}")
+
+    # Obsługa wyboru metody wag
+    weight_functions = {
+        "Markowitz": Markowitz_fun(criteria_result, method=markowitz_method),
+        "Risk Metric": risk_metric_fun(criteria_result, risk_metric=risk_metric_type, start=data_start, end=data_end),
+        "Inverse Regression": inv_reglin_fun(criteria_result, start=data_start, end=data_end)
+    }
+
+    weight_result = weight_functions.get(weight, None)
+    weight_result['weights'] = np.absolute(weight_result['weights'])
+    print(weight_result)
+    if weight_result is None:
+        raise ValueError(f"Invalid weight method: {weight}")
+
+    # Scalanie wyników
+    criteria_result = weight_result.merge(criteria_result, on='symbol', how='left')
+    criteria_result['weighted_adjusted'] = criteria_result['adjusted'] * criteria_result['weights']
+
+    # Obliczanie skumulowanych cen portfela
+    prices_list = [criteria_result[criteria_result['symbol'] == symbol]['weighted_adjusted'].values for symbol in criteria_result['symbol'].unique()]
+    prices = np.sum(prices_list, axis=0)
+
+    prices_df = pd.DataFrame({
+        'date': stockdata['date'].unique(),
+        'prices': prices
+    })
+
+    return prices_df, weight_result
+
+
+
+
+
+
 
 '''
 print(wrapper(["United States"],['Energy', 'Communication Services', 'Basic Materials', 'Consumer Cyclical',
