@@ -366,15 +366,18 @@ def wrap_wallet(request):
 
             criteria = request.POST.get("criteria", "").strip("[]'\"")  # Usuwamy zbędne znaki
             weight = request.POST.get("weight", "").strip("[]'\"")  # Usuwamy zbędne znaki
-            print(criteria,weight)
+            #print(criteria,weight)
             # Pobranie dodatkowych parametrów dla kryteriów
-            n_co = request.POST.get("n_co", 100)  # Liczba spółek
+            n_co1 = request.POST.get("n_co1", 100)  # Liczba spółek
+            n_co2 = request.POST.get("n_co2", 100)  # Liczba spółek
+            n_co3 = request.POST.get("n_co3", 100)  # Liczba spółek
             risk = request.POST.get("risk", 0)  # Ryzyko (np. dla zmienności)
             beta_1 = request.POST.get("beta_1", 0.75)
             beta_2 = request.POST.get("beta_2", 1.25)
             sharpe_1 = request.POST.get("sharpe_1", 0.0)
             sharpe_2 = request.POST.get("sharpe_2", 0.16)
             a = request.POST.get("a", 0.95)  # Poziom ufności dla VaR
+            print(n_co1, n_co2, n_co3)
 
             # Pobranie dodatkowych parametrów dla wag
             markowitz_method = request.POST.get("markowitz-choices", "return-var")
@@ -393,7 +396,9 @@ def wrap_wallet(request):
                 sectors=sectors, 
                 criteria=criteria, 
                 weight=weight,
-                n_co=int(n_co),
+                n_co1=int(n_co1),
+                n_co2=int(n_co2),
+                n_co3=int(n_co3),
                 risk=float(risk),
                 beta_1=float(beta_1),
                 beta_2=float(beta_2),
@@ -413,7 +418,7 @@ def wrap_wallet(request):
             os.makedirs(img_dir, exist_ok=True)
             
             # Wczytanie danych rynkowych
-            market_data = pd.read_csv("sp500cleaned.csv", na_values="NA")
+            market_data = pd.read_csv("sp500_new.csv", na_values="NA")
             market_data["date"] = pd.to_datetime(market_data["date"])
             prices_df["date"] = pd.to_datetime(prices_df["date"])
             

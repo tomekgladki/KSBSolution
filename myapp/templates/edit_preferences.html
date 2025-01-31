@@ -258,11 +258,11 @@
                     <div class="additional-options" id="volatility-options" style="display: none;">
                         <div class="input-group">
                             <label for="n_co">Number of Samples:</label>
-                            <input type="number" id="n_co" value="100" step="1">
+                            <input type="number" id="n_co1" name="n_co1" value="100" step="1" form="main-form">
                         </div>
                         <div class="input-group">
                             <label for="risk">Risk:</label>
-                            <input type="number" id="risk" value="0" step="0.01">
+                            <input type="number" id="risk" name="risk" value="0" step="0.01">
                         </div>
                     </div>
                 </div>
@@ -317,7 +317,7 @@
                     <div class="additional-options" id="var-options" style="display: none;">
                         <div class="input-group">
                             <label for="n_co">Number of Companies:</label>
-                            <input type="number" id="n_co" value="100" step="1">
+                            <input type="number" id="n_co2" value="100" step="1">
                         </div>
                         <div class="input-group">
                             <label for="a">Confidence Level (a):</label>
@@ -335,7 +335,7 @@
                     <div class="additional-options" id="drawdown-options" style="display: none;">
                         <div class="input-group">
                             <label for="n_co">Number of Companies:</label>
-                            <input type="number" id="n_co" value="100" step="1">
+                            <input type="number" id="n_co3" value="100" step="1">
                         </div>
                     </div>
                 </div>
@@ -657,6 +657,14 @@
         window.onload = checkFormValidity;
 
 
+    </script>
+    <script>
+        document.querySelector("form").addEventListener("submit", function () {
+            let input = document.getElementById("n_co1");
+            if (input) {
+                input.disabled = false;  // Odblokuj pole, aby zostało wysłane w POST!
+            }
+        });
     </script>
 </body>
 </html>

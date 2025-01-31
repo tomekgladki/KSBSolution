@@ -122,11 +122,11 @@ def wrapper(countries:[], sectors:[], criteria, weight):
 
 
 def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowitz",
-            n_co=100, risk=0, beta_1=0.75, beta_2=1.25, sharpe_1=0.0, sharpe_2=0.16, a=0.95,
+            n_co1=100, n_co2=100, n_co3=100, risk=0, beta_1=0.75, beta_2=1.25, sharpe_1=0.0, sharpe_2=0.16, a=0.95,
             markowitz_method="return-var", risk_metric_type="volatility", risk_method="proportional",
             data_start=150, data_end=200):
-    print(countries)
-    print(sectors)
+    #print(countries)
+    #print(sectors)
 
     # Rozbijamy pojedynczy string w liście na listę oddzielnych wartości
     countries = countries[0].split(',')
@@ -138,15 +138,15 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
 
     print("1")
     tickers = select_tickers(countries, sectors)
-    print(tickers)
-    stockdata = pd.read_csv("stock_data2.csv")
-    stockdata = stockdata.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
-    print(stockdata)
+    #print(tickers)
+    stockdata = pd.read_csv("2ydata_old.csv")
+    #stockdata = stockdata.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
+    #print(stockdata)
     print("2")
     data = stockdata[stockdata["symbol"].isin(tickers)]
-    market_data = pd.read_csv('sp500cleaned.csv', na_values='NA')
-    market_data = market_data.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
-    print(market_data)
+    market_data = pd.read_csv('sp500_old.csv', na_values='NA')
+    #market_data = market_data.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
+    #print(market_data)
     print("3")
     #print("Data (tickers after filtering):")
     #print(data.head())
@@ -159,15 +159,15 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
     print("symbol" in market_data.columns, "adjusted" in market_data.columns)
     # Obsługa wyboru kryterium
     criteria_functions = {
-        "Volatility": volatility_fun(data, n_co=n_co, risk=risk),
+        "Volatility": volatility_fun(data, n_co=n_co1, risk=risk),
         "Beta": beta_fun(data, market_data, beta_1=beta_1, beta_2=beta_2),
-        "Drawdown": drawdown_fun(data, n_co=n_co),
-        "VaR": VaR_fun(data, n_co=n_co, a=a),
+        "Drawdown": drawdown_fun(data, n_co=n_co2),
+        "VaR": VaR_fun(data, n_co=n_co3, a=a),
         "Sharpe": sharpe_fun(data, sharpe_1=sharpe_1, sharpe_2=sharpe_2)
     }
-    print("4")
+    #print("4")
     criteria_result = criteria_functions.get(criteria, None)
-    print(criteria_result)
+    #print(criteria_result)
     if criteria_result is None:
         raise ValueError(f"Invalid criteria: {criteria}")
 
@@ -180,12 +180,20 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
 
     weight_result = weight_functions.get(weight, None)
     weight_result['weights'] = np.absolute(weight_result['weights'])
-    print(weight_result)
+    #print(criteria_result)
+    #print(weight_result)
+    #print(weight_result)
     if weight_result is None:
         raise ValueError(f"Invalid weight method: {weight}")
 
     # Scalanie wyników
-    criteria_result = weight_result.merge(criteria_result, on='symbol', how='left')
+    symbols = criteria_result['symbol']
+    print(symbols)
+    newdata = pd.read_csv("2ydata_new.csv")
+    newdata = newdata[newdata['symbol'].isin(symbols)]
+    #print(criteria_result['symbol'])
+    criteria_result = weight_result.merge(newdata, on='symbol', how='left')
+    print(criteria_result)
     criteria_result['weighted_adjusted'] = criteria_result['adjusted'] * criteria_result['weights']
 
     # Obliczanie skumulowanych cen portfela
@@ -193,7 +201,7 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
     prices = np.sum(prices_list, axis=0)
 
     prices_df = pd.DataFrame({
-        'date': stockdata['date'].unique(),
+        'date': newdata['date'].unique(),
         'prices': prices
     })
 
