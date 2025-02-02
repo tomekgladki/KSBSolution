@@ -355,8 +355,8 @@ def wrap_wallet(request):
 def wrap_wallet(request):
     if request.method == "POST":
         try:
-            print("Received POST request to wrap_wallet")
-            print("POST data:", request.POST)
+            #print("Received POST request to wrap_wallet")
+            #print("POST data:", request.POST)
 
             # Pobranie danych z formularza
             countries = request.POST.getlist("countries")
@@ -377,7 +377,6 @@ def wrap_wallet(request):
             sharpe_1 = request.POST.get("sharpe_1", 0.0)
             sharpe_2 = request.POST.get("sharpe_2", 0.16)
             a = request.POST.get("a", 0.95)  # Poziom ufności dla VaR
-            print(n_co1, n_co2, n_co3)
 
             # Pobranie dodatkowych parametrów dla wag
             markowitz_method = request.POST.get("markowitz-choices", "return-var")
@@ -438,17 +437,13 @@ def wrap_wallet(request):
             # Tworzenie wykresów
             fig, axs = plt.subplots(2, 2, figsize=(18, 12))
             plt.style.use("classic")
-            print("6")
             # Wykres I: Ceny portfela vs rynek
-            print(prices_df)
             prices_df_dates = prices_df["date"].values
             prices_df_prices = prices_df["scaled_prices"].values
             market_data_dates = market_data["date"].values
             market_data_prices = market_data["scaled_adjusted"].values
             axs[0, 0].plot(prices_df_dates, prices_df_prices, label="Portfolio", color="purple", linewidth=1.5)
-            print("6.1")
             axs[0, 0].plot(market_data_dates, market_data_prices, label="SP500", color="orange", linewidth=1.5)
-            print("6.5")
             axs[0, 0].set_title("Portfolio Prices vs The Market", fontsize=14)
             axs[0, 0].set_xlabel("Date")
             axs[0, 0].set_ylabel("Scaled Prices")
@@ -457,7 +452,6 @@ def wrap_wallet(request):
             axs[0, 0].xaxis.set_major_locator(mdates.MonthLocator(interval=2))
             axs[0, 0].xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
             axs[0, 0].tick_params(axis="x", rotation=45)
-            print("7")
             # Wykres II: Dzienne zwroty
             colors = np.where(prices_df["daily_returns"] > 0, "green", "red")
             axs[0, 1].bar(prices_df["date"], prices_df["daily_returns"], color=colors, edgecolor="black", alpha=0.7)
@@ -468,7 +462,7 @@ def wrap_wallet(request):
             axs[0, 1].xaxis.set_major_locator(mdates.MonthLocator(interval=2))
             axs[0, 1].xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
             axs[0, 1].tick_params(axis="x", rotation=45)
-            print("8")
+            
             # Wykres III: Histogram zwrotów
             # Create bins for the histogram
             bins = 30  # Number of bins in the histogram
@@ -489,7 +483,7 @@ def wrap_wallet(request):
             axs[1, 0].set_xlabel('Daily Returns (%)', fontsize=12)
             axs[1, 0].set_ylabel('Days', fontsize=12)
             axs[1, 0].grid(axis='y', alpha=0.3)
-            print("9")
+            
             # Wykres IV: Wagi aktywów
             axs[1, 1].bar(weights_sorted["symbol"], weights_sorted["weights"], color="darkorange", edgecolor="black", alpha=0.8)
             axs[1, 1].set_title("Asset Allocation", fontsize=14)
@@ -497,7 +491,7 @@ def wrap_wallet(request):
             axs[1, 1].set_ylabel("Weight")
             axs[1, 1].tick_params(axis="x", rotation=90)
             axs[1, 1].grid(axis="y", alpha=0.3)
-            print("10")
+            
             # Zapisanie wykresu
             plot_path = os.path.join(img_dir, "portfolio_plot.png")
             plt.tight_layout()

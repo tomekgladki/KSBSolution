@@ -136,27 +136,21 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
     countries = [country.strip() for country in countries]
     sectors = [sector.strip() for sector in sectors]
 
-    print("1")
     tickers = select_tickers(countries, sectors)
     #print(tickers)
     stockdata = pd.read_csv("2ydata_old.csv")
     #stockdata = stockdata.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
     #print(stockdata)
-    print("2")
     data = stockdata[stockdata["symbol"].isin(tickers)]
     market_data = pd.read_csv('sp500_old.csv', na_values='NA')
     #market_data = market_data.rename(columns={"Ticker": "symbol", "Date": "date", "Close":"adjusted"})
     #print(market_data)
-    print("3")
     #print("Data (tickers after filtering):")
     #print(data.head())
 
     #print("Market data:")
     #print(market_data.head())
 
-    print("Checking if necessary columns exist in data:")
-    print("symbol" in data.columns, "adjusted" in data.columns)
-    print("symbol" in market_data.columns, "adjusted" in market_data.columns)
     # Obsługa wyboru kryterium
     criteria_functions = {
         "Volatility": volatility_fun(data, n_co=n_co1, risk=risk),
@@ -188,12 +182,10 @@ def wrapper(countries=None, sectors=None, criteria="Volatility", weight="Markowi
 
     # Scalanie wyników
     symbols = criteria_result['symbol']
-    print(symbols)
     newdata = pd.read_csv("2ydata_new.csv")
     newdata = newdata[newdata['symbol'].isin(symbols)]
     #print(criteria_result['symbol'])
     criteria_result = weight_result.merge(newdata, on='symbol', how='left')
-    print(criteria_result)
     criteria_result['weighted_adjusted'] = criteria_result['adjusted'] * criteria_result['weights']
 
     # Obliczanie skumulowanych cen portfela
