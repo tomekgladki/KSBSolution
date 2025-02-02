@@ -1,0 +1,20 @@
+Aby uruchomić aplikację webową należy wypakować plik .zip do nowego folderu.
+Następnie trzeba ustawić wersje zgodne z requirements.txt.
+Dalej w terminalu pythonowym przejsć do ścieżki "...\myproject>" i tam wpisać następujące komendy.
+python manage.py makemigrations
+python manage.py migrate
+To umożliwi uruchomienie właściwej wersji strony.
+Dalej aby uruchomić serwer należy wpisać w terminal polecenie
+python manage.py runserver
+Powinien wyświtlić się następujący komunikat:
+
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+February 02, 2025 - 16:44:47
+Django version 4.2.17, using settings 'myproject.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+Należy wejść na stronę, której link został wygenerowany, założyć konto i gotowe.
